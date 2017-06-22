@@ -27,18 +27,17 @@ namespace SourceCodeSizeCounterLib
         /// <returns></returns>
         public Task<long> CountAsync()
         {
-            return Task.Run(() => CountAsync(sourceDirectory));
+            return Task.Run(() => Count(sourceDirectory));
         }
 
-        async Task<long> CountAsync(DirectoryInfo dir)
+        long Count(DirectoryInfo dir)
         {
             long sourceLengths = 0;
 
             var subDirectories = dir.GetDirectories(); // get sub-directories
-            var tasks = new Task<long>[subDirectories.Length];
-
-            for (int i = 0; i < tasks.Length; i++)
-                tasks[i] = CountAsync(subDirectories[i]); // count files in its subdirectories
+            
+            foreach (DirectoryInfo directory in subDirectories)
+                sourceLengths += Count(directory); // count files in its subdirectories
 
             var files = dir.GetFiles();
 
@@ -53,11 +52,7 @@ namespace SourceCodeSizeCounterLib
                 select file;
 
             sourceLengths += (from file in filteredFiles select file.Length).DefaultIfEmpty().Sum(); // counts Size
-
-
-            await Task.WhenAll(tasks);
-            sourceLengths += (from task in tasks select task.Result).Sum();
-
+            
             return sourceLengths;
         }
     }
