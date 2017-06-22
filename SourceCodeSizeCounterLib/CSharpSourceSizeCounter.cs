@@ -25,9 +25,9 @@ namespace SourceCodeSizeCounterLib
         ///     Asynchronously counts size of C sharp source files and returns its sum in bytes
         /// </summary>
         /// <returns></returns>
-        public async Task<long> CountAsync()
+        public Task<long> CountAsync()
         {
-            return await CountAsync(sourceDirectory);
+            return Task.Run(() => CountAsync(sourceDirectory));
         }
 
         async Task<long> CountAsync(DirectoryInfo dir)
