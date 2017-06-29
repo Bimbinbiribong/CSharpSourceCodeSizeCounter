@@ -13,6 +13,7 @@ namespace SourceCodeSizeCounterLib
     {
         readonly DirectoryInfo sourceDirectory;
         static readonly Regex designerRegex = new Regex(@"\.Designer\.cs$", RegexOptions.Compiled);
+        static readonly Regex generatedRegex = new Regex(@"\.Generated\.cs$", RegexOptions.Compiled);
         static readonly Regex csRegex = new Regex(@"\.cs$", RegexOptions.Compiled);
 
         /// <summary>
@@ -62,11 +63,13 @@ namespace SourceCodeSizeCounterLib
             var files = dir.GetFiles();
 
             var filteredFiles = from file in files.AsParallel()
-                where !designerRegex.IsMatch(file.Name) // filters out .Designer.cs files
-                where csRegex.IsMatch(file.Name) // takes .cs files
-                where !file.Name.StartsWith("TemporaryGeneratedFile_") // filters out generated files
-                where file.Name != "AssemblyInfo.cs"
-                select file;
+                                where !designerRegex.IsMatch(file.Name) // filters out .Designer.cs files
+                                where !generatedRegex.IsMatch(file.Name) // filters out .Generated.cs
+                                where csRegex.IsMatch(file.Name) // takes .cs files
+                                where !file.Name.StartsWith("TemporaryGeneratedFile_") // filters out generated files
+                                where file.Name != "AssemblyInfo.cs"
+                                where file.Name != "Reference.cs"
+                                select file;
 
             sourceLengths += (from file in filteredFiles select file.Length).DefaultIfEmpty().Sum(); // counts Size
 
