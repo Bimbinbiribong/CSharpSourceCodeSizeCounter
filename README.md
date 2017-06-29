@@ -7,4 +7,5 @@ Input:
 Output:
   - size of C# source files in bytes and kilobytes (truncated)
   
-In this project C# source file written by human is defined as C# source file whose name isn't "AssemblyInfo.cs", doesn't end with ".Designer.cs" and doesn't start with "TemporaryGeneratedFile_". Every other file ending with ".cs" is defined as C# source file.
+In this project C# source file written by human is defined as C# source file whose name isn't "AssemblyInfo.cs" or "Reference.cs", doesn't end with ".Designer.cs" or ".Generated.cs", doesn't start with "TemporaryGeneratedFile_".
+Every other file ending with ".cs" is defined as C# source file.
