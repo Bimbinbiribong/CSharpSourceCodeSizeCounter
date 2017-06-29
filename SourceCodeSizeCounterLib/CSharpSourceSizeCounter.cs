@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 namespace SourceCodeSizeCounterLib
 {
     /// <summary>
-    /// Instance of this class' purpose is to count C sharp source files sizes.
+    ///     Instance of this class' purpose is to count C sharp source files sizes.
     /// </summary>
     public class CSharpSourceSizeCounter
     {
         readonly DirectoryInfo sourceDirectory;
+        static readonly Regex designerRegex = new Regex(@"\.Designer\.cs$", RegexOptions.Compiled);
+        static readonly Regex csRegex = new Regex(@"\.cs$", RegexOptions.Compiled);
 
         /// <summary>
         ///     Constructs an instance of object counting c sharp source files size.
@@ -32,7 +34,7 @@ namespace SourceCodeSizeCounterLib
         }
 
         /// <summary>
-        /// Counts size of C sharp source files and returns its sum in bytes.
+        ///     Counts size of C sharp source files and returns its sum in bytes.
         /// </summary>
         /// <returns></returns>
         public long Count()
@@ -53,24 +55,18 @@ namespace SourceCodeSizeCounterLib
             {
                 return 0;
             }
-            
-            foreach (DirectoryInfo directory in subDirectories)
-            {
-                sourceLengths += Count(directory); // count files in its subdirectories
-            }
 
+            foreach (DirectoryInfo directory in subDirectories)
+                sourceLengths += Count(directory); // count files in its subdirectories
 
             var files = dir.GetFiles();
 
-            Regex designerRegex = new Regex(@"\.Designer\.cs$");
-            Regex csRegex = new Regex(@"\.cs$");
-
             var filteredFiles = from file in files.AsParallel()
-                                where !designerRegex.IsMatch(file.Name) // filters out .Designer.cs files
-                                where csRegex.IsMatch(file.Name) // takes .cs files
-                                where !file.Name.StartsWith("TemporaryGeneratedFile_") // filters out generated files
-                                where file.Name != "AssemblyInfo.cs"
-                                select file;
+                where !designerRegex.IsMatch(file.Name) // filters out .Designer.cs files
+                where csRegex.IsMatch(file.Name) // takes .cs files
+                where !file.Name.StartsWith("TemporaryGeneratedFile_") // filters out generated files
+                where file.Name != "AssemblyInfo.cs"
+                select file;
 
             sourceLengths += (from file in filteredFiles select file.Length).DefaultIfEmpty().Sum(); // counts Size
 
