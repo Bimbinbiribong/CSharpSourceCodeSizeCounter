@@ -63,9 +63,9 @@ namespace SourceCodeSizeCounterLib
             var files = dir.GetFiles();
 
             var filteredFiles = from file in files.AsParallel()
+                                where csRegex.IsMatch(file.Name) // takes .cs files
                                 where !designerRegex.IsMatch(file.Name) // filters out .Designer.cs files
                                 where !generatedRegex.IsMatch(file.Name) // filters out .Generated.cs
-                                where csRegex.IsMatch(file.Name) // takes .cs files
                                 where !file.Name.StartsWith("TemporaryGeneratedFile_") // filters out generated files
                                 where file.Name != "AssemblyInfo.cs"
                                 where file.Name != "Reference.cs"
