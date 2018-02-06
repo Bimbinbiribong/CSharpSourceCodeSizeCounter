@@ -12,10 +12,18 @@ namespace SourceCodeSizeCounter
     {
         static void Main(string[] args)
         {
-            CSharpSourceSizeCounter c = new CSharpSourceSizeCounter(args[0]);
+            string path = args[0];
+
+            CSharpSourceSizeCounter c = new CSharpSourceSizeCounter(path);
             long filesCountBytes = c.Count();
             Console.WriteLine($"Bytes count: {filesCountBytes}");
             Console.WriteLine($"Kilobytes count: {filesCountBytes / 1024} (truncated)");
+
+            if (args.Length > 1 && args[1] == "-l")
+            {
+                long linesCount = c.GetLinesCount().Result;
+                Console.WriteLine($"Number of lines: {linesCount}");
+            }
         }
     }
 }
