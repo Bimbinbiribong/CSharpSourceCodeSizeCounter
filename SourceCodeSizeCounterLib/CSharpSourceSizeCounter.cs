@@ -14,10 +14,10 @@ namespace SourceCodeSizeCounterLib
     /// </summary>
     public class CSharpSourceSizeCounter
     {
-        readonly DirectoryInfo sourceDirectory;
-        static readonly Regex designerRegex = new Regex(@"\.Designer\.cs$", RegexOptions.Compiled);
-        static readonly Regex generatedRegex = new Regex(@"\.Generated\.cs$", RegexOptions.Compiled);
-        static readonly Regex csRegex = new Regex(@"\.cs$", RegexOptions.Compiled);
+        private readonly DirectoryInfo sourceDirectory;
+        private static readonly Regex designerRegex = new Regex(@"\.Designer\.cs$", RegexOptions.Compiled);
+        private static readonly Regex generatedRegex = new Regex(@"\.Generated\.cs$", RegexOptions.Compiled);
+        private static readonly Regex csRegex = new Regex(@"\.cs$", RegexOptions.Compiled);
 
         /// <summary>
         ///     Constructs an instance of object counting c sharp source files size.
@@ -46,7 +46,7 @@ namespace SourceCodeSizeCounterLib
             return Count(sourceDirectory);
         }
 
-        long Count(DirectoryInfo dir)
+        public static long Count(DirectoryInfo dir)
         {
             long sourceLengths = 0;
 
@@ -87,8 +87,8 @@ namespace SourceCodeSizeCounterLib
         {
             return await GetLinesCount(sourceDirectory);
         }
-
-        private async Task<long> GetLinesCount(DirectoryInfo dir)
+        
+        public static async Task<long> GetLinesCount(DirectoryInfo dir)
         {
             Debug.WriteLine($"Recursed to directory {dir.Name}");
 
@@ -133,10 +133,13 @@ namespace SourceCodeSizeCounterLib
                 Debug.WriteLine($"{file.Name} reading started");
                 using (StreamReader reader = new StreamReader(file.Open(FileMode.Open)))
                 {
+                    int fileLinesCount = 0;
                     while (reader.ReadLine() != null)
                     {
-                        Interlocked.Increment(ref linesCount);
+                        fileLinesCount++;
                     }
+
+                    Interlocked.Add(ref linesCount, fileLinesCount);
                 }
                 Debug.WriteLine($"{file.Name} reading finished");
             });
