@@ -1,13 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-namespace SourceCodeSizeCounterLib
+﻿namespace SourceCodeSizeCounter
 {
+    using System;
     using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     Instance of this class' purpose is to count C sharp source files sizes.
