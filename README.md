@@ -11,3 +11,16 @@ Output:
   
 In this project C# source file written by human is defined as C# source file whose name isn't "AssemblyInfo.cs" or "Reference.cs", doesn't end with ".Designer.cs" or ".Generated.cs", doesn't start with "TemporaryGeneratedFile_".
 Every other file ending with ".cs" is defined as C# source file.
+
+## Example
+Input:
+```
+./SourceCodeSizeCounter.exe ".\SolutionDirectory" -l
+```
+
+Output:
+```
+Bytes count: 852858
+Kilobytes count: 832 (truncated)
+Number of lines: 24873
+```
